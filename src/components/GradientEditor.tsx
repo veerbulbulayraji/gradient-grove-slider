@@ -27,6 +27,21 @@ const GradientEditor = () => {
     .map((stop) => `${stop.color} ${stop.position}%`)
     .join(', ')})`;
 
+  const generateRandomColor = () => {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  };
+
+  const isPositionOccupied = (position: number, threshold = 2) => {
+    return colorStops.some(stop => 
+      Math.abs(stop.position - position) <= threshold
+    );
+  };
+
   const handleStopDrag = (e: React.MouseEvent | MouseEvent, stopId: string) => {
     if (!sliderRef.current) return;
     
@@ -56,8 +71,13 @@ const GradientEditor = () => {
     const x = e.clientX - rect.left;
     const position = (x / rect.width) * 100;
     
+    // Check if there's already a color stop at this position
+    if (isPositionOccupied(position)) {
+      return;
+    }
+
     const newStop: ColorStop = {
-      color: '#FFFFFF',
+      color: generateRandomColor(),
       position,
       id: uuidv4(),
     };
@@ -185,6 +205,7 @@ const GradientEditor = () => {
                   }}
                   onMouseDown={(e) => {
                     e.preventDefault();
+                    e.stopPropagation();
                     setDraggingStop(stop.id);
                   }}
                 >
