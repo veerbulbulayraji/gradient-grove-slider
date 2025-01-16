@@ -3,7 +3,7 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
-import { v4 as uuidv4 } from '@/lib/utils';
+import { v4 as uuidv4 } from 'uuid';
 
 interface ColorStop {
   color: string;
